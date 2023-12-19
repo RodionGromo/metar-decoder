@@ -52,8 +52,7 @@ def parse(json_data):
     data["callcode"] = raw_data[0]
     data["datetime"] = datetime.datetime.strptime(raw_data[1][:-1], "%d%H%M")
     data["wind_angle"] = int(raw_data[2][:3])
-    data["wind_speed"] = int(raw_data[2][3:5])
-    data["wind_units"] = raw_data[2][5:]
+    data["wind_speed"] = str(int(raw_data[2][3:5])) + " " + raw_data[2][5:]
     data["visibility_distance"] = int(raw_data[3])
     # weather
     weather_status = ["medium", ""]
@@ -92,8 +91,7 @@ def parse(json_data):
             cloudiness += f" undefined cnd: {additional_data}"
         data["cloudiness"] += cloudiness + " | "
         i += 1
-
-    #
+    # temperature
     air_temp, dew_temp = raw_data[i].split("/")
     if("M" in air_temp):
         data["air_temp"] = str(-int(air_temp[1:]))
@@ -106,11 +104,20 @@ def parse(json_data):
     else:
         data["dew_temp"] = str(int(dew_temp))
     data["dew_temp"] += " celsius"
-
+    
+    # pressure
+    i+=1
+    pressure_data = raw_data[i]
+    data["pressure"] = str(int(pressure_data[1:]))
+    if pressure_data[0] == "Q":
+    	data["pressure"] += " hPa"
+    elif pressure_data[0] == "A":
+    	data["pressure"] += " inHg"
     return (report_date, data)
 
-json_data = requests.get("https://metartaf.ru/ULLI.json").json()
 
+ask = "uuob"
+json_data = requests.get(f"https://metartaf.ru/{ask.upper()}.json").json()
 
 print(json_data["metar"])
 date, data = parse(json_data)
