@@ -231,13 +231,13 @@ class MetarParser():
 
 		for datablock in metar_data:
 			# callcode only
-			if re.match(r"\b[a-zA-Z]{4}\b", datablock):
+			if re.match(r"\b[A-Z]{4}\b", datablock):
 				data["callcode"] = datablock
 			# time
 			elif re.match(r"\b\d{6}[A-Z]\b", datablock):
 				data["time"] = self.parse_time(datablock)
 			# wind 1
-			elif re.match(r"\b\d{5}[A-Z]{3}\b", datablock):
+			elif re.match(r"\b\d{5}(KT|MPS|KMH)\b", datablock):
 				data["wind"] = self.parse_wind(datablock, 0)
 			# wind 2 (gusts)
 			elif re.match(r"\b\d{5}G\d{2}[A-Z]{3}\b", datablock):

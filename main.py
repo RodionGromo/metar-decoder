@@ -24,7 +24,7 @@ def pretty_print_list(data, height=0):
 		else:
 			print(f"{height_str}> {obj}")
 
-ask = "UHHH"
+ask = "EGLL"
 
 json_data = requests.get(f"https://metartaf.ru/{ask.upper()}.json").json()
 print(json_data["metar"].split("\n")[1])
